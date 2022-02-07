@@ -9,19 +9,28 @@ const Composite = Matter.Composite;
 
 let engine;
 let world;
+var solo;
 
 function setup() {
   createCanvas(500, 700);
+  frameRate(80);
   engine = Engine.create();
   world = engine.world;
+  solo = new Solo(200, 680, 600, 20);
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50);
+
 }
 
 function draw() {
   background(51);
+  solo.mostrar();
+
   Engine.update(engine);
+
+
+
 
 }

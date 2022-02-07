@@ -1,8 +1,7 @@
-class Corda {
+class Rope {
   constructor(nlink, pointA) {
     this.nlink = nlink;
     const group = Body.nextGroup(true);
-    //cria um composto de retangulos
     const rects = Composites.stack(100, 100, this.nlink, 1, 5, 5, function (x, y) {
       return Bodies.rectangle(x, y, 30, 5, {
         collisionFilter: {
@@ -12,7 +11,6 @@ class Corda {
     });
 
     this.pointA = pointA;
-    //cria uma corrente com os retangulos criados
     this.body = Composites.chain(rects, 0.1, 0, -0.6, 0, {
       stiffness: 0.1,
       length: 0.1,
@@ -23,7 +21,7 @@ class Corda {
 
     World.add(engine.world, this.body);
 
-    //une os retangulos uns aos outros
+
     Composite.add(rects, Constraint.create({
       pointA: this.pointA,
       bodyB: rects.bodies[0],
@@ -37,7 +35,6 @@ class Corda {
 
   }
 
-  //corta a corda
   cortar () { //Matter.Composite.clear(this.rope,true);
     this.body = null;
   }
@@ -52,7 +49,7 @@ class Corda {
 
   drawVertices(vertices) {
     beginShape();
-    fill('#FFF717');
+    fill('#FFF717')
     noStroke();
 
     for (let i = 0; i < vertices.length; i++) {
@@ -87,7 +84,7 @@ class Corda {
       if (constraint.bodyB) {
         posB = constraint.bodyB.position;
       }
-      push();
+      push()
       strokeWeight(4);
       stroke(255);
       line(
