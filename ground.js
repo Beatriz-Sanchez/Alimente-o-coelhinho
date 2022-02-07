@@ -1,6 +1,6 @@
 class Ground {
   constructor(x, y, w, h) {
-    let options = {
+    var options = {
       isStatic: true
     };
 
@@ -11,7 +11,7 @@ class Ground {
   }
 
   show() {
-    let pos = this.body.position;
+    var pos = this.body.position;
     push();
     rectMode(CENTER);
     noStroke();
