@@ -12,6 +12,16 @@ let world;
 var corda, fruta, solo;
 var fruta_con;
 
+var fundo;
+var frutaImg;
+var coelhoImg;
+
+function preload() {
+  fundo = loadImage('background.png');
+  frutaImg = loadImage('melon.png');
+  coelhoImg = loadImage('Rabbit-01.png');
+}
+
 function setup() {
   createCanvas(500, 700);
   frameRate(80);
@@ -33,12 +43,14 @@ function setup() {
   rectMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50);
+  imageMode(CENTER);
 }
 
 function draw() {
   background(51);
+  image(fundo, width / 2, height / 2, width, height);
 
-  ellipse(fruta.position.x, fruta.position.y, 20);
+  image(frutaImg, fruta.position.x, fruta.position.y, 70, 70);
 
   corda.mostrar();
 
