@@ -1,6 +1,6 @@
 class Solo {
   constructor(x, y, w, h) {
-    var options = {
+    let options = {
       isStatic: true
     };
 
@@ -11,7 +11,7 @@ class Solo {
   }
 
   mostrar() {
-    var pos = this.body.position;
+    let pos = this.body.position;
     push();
     rectMode(CENTER);
     noStroke();

@@ -35,7 +35,8 @@ class Corda {
 
   }
 
-  cortar () { //Matter.Composite.clear(this.rope,true);
+  cortar () { 
+    //Matter.Composite.clear(this.rope,true);
     this.body = null;
   }
 
