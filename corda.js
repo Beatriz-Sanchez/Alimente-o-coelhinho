@@ -1,4 +1,4 @@
-class Rope {
+class Corda {
   constructor(nlink, pointA) {
     this.nlink = nlink;
     const group = Body.nextGroup(true);
