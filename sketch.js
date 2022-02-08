@@ -12,6 +12,16 @@ let world;
 var rope, fruit, ground;
 var fruit_con;
 
+var bg_img;
+var food;
+var rabbit;
+
+function preload() {
+  bg_img = loadImage('background.png');
+  food = loadImage('melon.png');
+  rabbit = loadImage('Rabbit-01.png');
+}
+
 function setup() {
   createCanvas(500, 700);
   frameRate(80);
@@ -33,12 +43,14 @@ function setup() {
   rectMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50);
+  imageMode(CENTER);
 }
 
 function draw() {
   background(51);
+  image(bg_img, width / 2, height / 2, width, height);
 
-  ellipse(fruit.position.x, fruit.position.y, 20);
+  image(food, fruit.position.x, fruit.position.y, 70, 70);
 
   rope.show();
 
