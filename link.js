@@ -17,4 +17,9 @@ class Link {
     });
     World.add(engine.world, this.link);
   }
+
+  soltar() {
+    World.remove(engine.world, this.link);
+
+  }
 }
