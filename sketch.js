@@ -18,11 +18,18 @@ var coelhoImg;
 
 var botao;
 var coelho;
+var piscar, comer;
 
 function preload() {
   fundo = loadImage('background.png');
   frutaImg = loadImage('melon.png');
   coelhoImg = loadImage('Rabbit-01.png');
+  piscar = loadAnimation("blink_1.png", "blink_2.png", "blink_3.png");
+  comer = loadAnimation("eat_0.png", "eat_1.png", "eat_2.png", "eat_3.png", "eat_4.png");
+
+  piscar.playing = true;
+  comer.playing = true;
+  comer.looping = false;
 }
 
 function setup() {
@@ -44,9 +51,18 @@ function setup() {
     y: 30
   });
   solo = new Solo(200, 690, 600, 20);
+
   coelho = createSprite(200, 620, 100, 100);
   coelho.addImage(coelhoImg);
   coelho.scale = 0.2;
+
+  piscar.frameDelay = 20;
+  comer.frameDelay = 20;
+
+  coelho.addAnimation('piscando', piscar);
+  coelho.addAnimation('comendo', comer);
+  
+  coelho.changeAnimation('piscando');
 
   fruta = Bodies.circle(300, 300, 20);
   Matter.Composite.add(corda.body, fruta);
@@ -64,13 +80,12 @@ function draw() {
   image(fundo, width / 2, height / 2, width, height);
 
   image(frutaImg, fruta.position.x, fruta.position.y, 70, 70);
-
+  
   corda.mostrar();
 
   Engine.update(engine);
   solo.mostrar();
   drawSprites();
-
 }
 
 function cair() {
