@@ -35,8 +35,7 @@ class Rope {
 
   }
 
-  break () { 
-    //Matter.Composite.clear(this.rope,true);
+  break () { //Matter.Composite.clear(this.rope,true);
     this.body = null;
   }
 
