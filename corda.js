@@ -35,8 +35,7 @@ class Corda {
 
   }
 
-  cortar () { 
-    //Matter.Composite.clear(this.rope,true);
+  cortar () { //Matter.Composite.clear(this.rope,true);
     this.body = null;
   }
 
@@ -50,7 +49,7 @@ class Corda {
 
   drawVertices(vertices) {
     beginShape();
-    fill('#FFF717')
+    fill('#FFF717');
     noStroke();
 
     for (let i = 0; i < vertices.length; i++) {

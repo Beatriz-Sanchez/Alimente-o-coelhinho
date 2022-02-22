@@ -13,55 +13,54 @@ var corda, fruta, solo;
 var fruta_con;
 
 var fundo;
-var frutaImg;
-var coelhoImg;
+var comida_img;
+var coelho_img;
 
 var botao;
 var coelho;
-var piscar, comer;
+var piscar, comer, triste;
 
 function preload() {
   fundo = loadImage('background.png');
-  frutaImg = loadImage('melon.png');
-  coelhoImg = loadImage('Rabbit-01.png');
+  comida_img = loadImage('melon.png');
+  coelho_img = loadImage('Rabbit-01.png');
+
   piscar = loadAnimation("blink_1.png", "blink_2.png", "blink_3.png");
   comer = loadAnimation("eat_0.png", "eat_1.png", "eat_2.png", "eat_3.png", "eat_4.png");
+  triste = loadAnimation("sad_1.png", "sad_2.png", "sad_3.png");
 
   piscar.playing = true;
   comer.playing = true;
+  triste.playing = true;
+  triste.looping = false;
   comer.looping = false;
 }
 
 function setup() {
   createCanvas(500, 700);
+
   frameRate(80);
 
   engine = Engine.create();
   world = engine.world;
 
-  //btn 1
   botao = createImg('cut_btn.png');
-  botao.position(200, 30);
+  botao.position(220, 30);
   botao.size(50, 50);
   botao.mouseClicked(cair);
 
-
-  corda = new Corda(8, {
-    x: 220,
-    y: 30
-  });
+  corda = new Corda(7, {x: 245,y: 30});
   solo = new Solo(200, 690, 600, 20);
-
-  coelho = createSprite(200, 620, 100, 100);
-  coelho.addImage(coelhoImg);
-  coelho.scale = 0.2;
 
   piscar.frameDelay = 20;
   comer.frameDelay = 20;
 
+  coelho = createSprite(420, 620, 100, 100);
+  coelho.scale = 0.2;
+
   coelho.addAnimation('piscando', piscar);
   coelho.addAnimation('comendo', comer);
-  
+  coelho.addAnimation('chorando', triste);
   coelho.changeAnimation('piscando');
 
   fruta = Bodies.circle(300, 300, 20);
@@ -72,24 +71,52 @@ function setup() {
   rectMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50);
-  imageMode(CENTER);
 }
 
 function draw() {
   background(51);
-  image(fundo, width / 2, height / 2, width, height);
+  image(fundo, 0, 0, width, height);
 
-  image(frutaImg, fruta.position.x, fruta.position.y, 70, 70);
-  
+  push();
+  imageMode(CENTER);
+  if (fruta != null) {
+    image(comida_img, fruta.position.x, fruta.position.y, 70, 70);
+  }
+  pop();
+
   corda.mostrar();
-
   Engine.update(engine);
   solo.mostrar();
+
   drawSprites();
+
+  if (colisao(fruta, coelho) == true) {
+    coelho.changeAnimation('comendo');
+  }
+
+
+  if (fruta != null && fruta.position.y >= 650) {
+    coelho.changeAnimation('chorando');
+  }
+
 }
 
 function cair() {
+  som_cortar.play();
   corda.cortar();
   fruta_con.soltar();
   fruta_con = null;
+}
+
+function colisao(corpo, sprite) {
+  if (corpo != null) {
+    var d = dist(corpo.position.x, corpo.position.y, sprite.position.x, sprite.position.y);
+    if (d <= 80) {
+      World.remove(engine.world, fruta);
+      fruta = null;
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
