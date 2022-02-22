@@ -20,10 +20,18 @@ var botao;
 var coelho;
 var piscar, comer, triste;
 
+var musica, som_cortar, som_triste, som_mastigar, som_ar;
+
 function preload() {
   fundo = loadImage('background.png');
   comida_img = loadImage('melon.png');
   coelho_img = loadImage('Rabbit-01.png');
+
+  musica = loadSound('sound1.mp3');
+  som_triste = loadSound("sad.wav")
+  som_cortar = loadSound('rope_cut.mp3');
+  som_mastigar = loadSound('eating_sound.mp3');
+  som_ar = loadSound('air.wav');
 
   piscar = loadAnimation("blink_1.png", "blink_2.png", "blink_3.png");
   comer = loadAnimation("eat_0.png", "eat_1.png", "eat_2.png", "eat_3.png", "eat_4.png");
