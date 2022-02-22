@@ -55,7 +55,7 @@ function setup() {
   piscar.frameDelay = 20;
   comer.frameDelay = 20;
 
-  coelho = createSprite(420, 620, 100, 100);
+  coelho = createSprite(250, 620, 100, 100);
   coelho.scale = 0.2;
 
   coelho.addAnimation('piscando', piscar);
