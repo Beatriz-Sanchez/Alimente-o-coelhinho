@@ -102,7 +102,6 @@ function draw() {
 }
 
 function cair() {
-  som_cortar.play();
   corda.cortar();
   fruta_con.soltar();
   fruta_con = null;
