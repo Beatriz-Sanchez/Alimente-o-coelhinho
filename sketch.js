@@ -45,7 +45,16 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(500, 700);
+  var Celular = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (Celular) {
+    canW = displayWidth;
+    canH = displayHeight;
+    createCanvas(displayWidth + 80, displayHeight);
+  } else {
+    canW = windowWidth;
+    canH = windowHeight;
+    createCanvas(windowWidth,windowHeight)
+}
 
   frameRate(80);
 
@@ -75,15 +84,24 @@ function setup() {
   botao_mudo.size(50, 50);
   botao_mudo.mouseClicked(mutar);
 
-  corda1 = new Corda(8, {x: 40, y: 30});
-  corda2 = new Corda(8, {x: 370, y: 40});
-  corda3 = new Corda(8, {x: 400, y: 225});
-  solo = new Solo(200, 690, 600, 20);
+  corda1 = new Corda(8, {
+    x: 40,
+    y: 30
+  });
+  corda2 = new Corda(8, {
+    x: 370,
+    y: 40
+  });
+  corda3 = new Corda(8, {
+    x: 400,
+    y: 225
+  });
+  solo = new Solo(200, canH, 600, 20);
 
   piscar.frameDelay = 20;
   comer.frameDelay = 20;
 
-  coelho = createSprite(170, 620, 100, 100);
+  coelho = createSprite(170, canH-80, 100, 100);
   coelho.scale = 0.2;
 
   coelho.addAnimation('piscando', piscar);
@@ -105,7 +123,7 @@ function setup() {
 
 function draw() {
   background(51);
-  image(fundo, 0, 0, width, height);
+  image(fundo, 0, 0, displayWidth+80, displayHeight);
 
   push();
   imageMode(CENTER);
