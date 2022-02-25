@@ -19,8 +19,9 @@ var rabbit;
 var button;
 var bunny;
 var blink, eat, sad;
+var mute_btn;
 
-var bk_song, cut_sound, sad_sound, eating_sound, air_sound;
+var bk_song, cut_sound, sad_sound, eating_sound;
 
 function preload() {
   bg_img = loadImage('background.png');
@@ -31,7 +32,6 @@ function preload() {
   sad_sound = loadSound("sad.wav")
   cut_sound = loadSound('rope_cut.mp3');
   eating_sound = loadSound('eating_sound.mp3');
-  air_sound = loadSound('air.wav');
 
   blink = loadAnimation("blink_1.png", "blink_2.png", "blink_3.png");
   eat = loadAnimation("eat_0.png", "eat_1.png", "eat_2.png", "eat_3.png", "eat_4.png");
@@ -49,21 +49,29 @@ function setup() {
 
   frameRate(80);
 
+  bk_song.play();
+  bk_song.setVolume(0.5);
+
   engine = Engine.create();
   world = engine.world;
 
   button = createImg('cut_btn.png');
-  button.position(220, 30);
+  button.position(20, 30);
   button.size(50, 50);
   button.mouseClicked(drop);
 
-  rope = new Rope(7, {x: 245, y: 30});
+  mute_btn = createImg('mute.png');
+  mute_btn.position(440, 20);
+  mute_btn.size(50, 50);
+  mute_btn.mouseClicked(mute);
+
+  rope = new Rope(8, {x: 40,y: 30});
   ground = new Ground(200, 690, 600, 20);
 
   blink.frameDelay = 20;
   eat.frameDelay = 20;
 
-  bunny = createSprite(250, 620, 100, 100);
+  bunny = createSprite(170, 620, 100, 100);
   bunny.scale = 0.2;
 
   bunny.addAnimation('blinking', blink);
@@ -71,7 +79,7 @@ function setup() {
   bunny.addAnimation('crying', sad);
   bunny.changeAnimation('blinking');
 
-  fruit = Bodies.circle(300, 300, 20);
+  fruit = Bodies.circle(45, 250, 20);
   Matter.Composite.add(rope.body, fruit);
 
   fruit_con = new Link(rope, fruit);
@@ -100,19 +108,30 @@ function draw() {
 
   if (collide(fruit, bunny) == true) {
     bunny.changeAnimation('eating');
+    eating_sound.play();
   }
 
 
   if (fruit != null && fruit.position.y >= 650) {
     bunny.changeAnimation('crying');
+    bk_song.stop();
+    sad_sound.play();
+    fruit = null;
   }
 
 }
 
 function drop() {
+  cut_sound.play();
   rope.break();
   fruit_con.detach();
   fruit_con = null;
+}
+
+function keyPressed() {
+  if (keyCode == LEFT_ARROW) {
+    airblow();
+  }
 }
 
 function collide(body, sprite) {
@@ -125,5 +144,13 @@ function collide(body, sprite) {
     } else {
       return false;
     }
+  }
+}
+
+function mute() {
+  if (bk_song.isPlaying()) {
+    bk_song.stop();
+  } else {
+    bk_song.play();
   }
 }
