@@ -9,14 +9,14 @@ const Composite = Matter.Composite;
 
 let engine;
 let world;
-var rope, fruit, ground;
-var fruit_con;
+var rope1, rope2, rope3, fruit, ground;
+var fruit_con1, fruit_con2, fruit_con3;
 
 var bg_img;
 var food;
 var rabbit;
 
-var button;
+var button1, button2, button3;
 var bunny;
 var blink, eat, sad;
 var mute_btn;
@@ -55,17 +55,29 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
 
-  button = createImg('cut_btn.png');
-  button.position(20, 30);
-  button.size(50, 50);
-  button.mouseClicked(drop);
+  button1 = createImg('cut_btn.png');
+  button1.position(20, 30);
+  button1.size(50, 50);
+  button1.mouseClicked(drop1);
+
+  button2 = createImg('cut_btn.png');
+  button2.position(330, 35);
+  button2.size(50, 50);
+  button2.mouseClicked(drop2);
+
+  button3 = createImg('cut_btn.png');
+  button3.position(360, 200);
+  button3.size(50, 50);
+  button3.mouseClicked(drop3);
 
   mute_btn = createImg('mute.png');
   mute_btn.position(440, 20);
   mute_btn.size(50, 50);
   mute_btn.mouseClicked(mute);
 
-  rope = new Rope(8, {x: 40,y: 30});
+  rope1 = new Rope(8, {x: 40,y: 30});
+  rope2 = new Rope(6, {x: 360,y: 40});
+  rope3 = new Rope(4, {x: 400,y: 225});
   ground = new Ground(200, 690, 600, 20);
 
   blink.frameDelay = 20;
@@ -79,10 +91,12 @@ function setup() {
   bunny.addAnimation('crying', sad);
   bunny.changeAnimation('blinking');
 
-  fruit = Bodies.circle(45, 250, 20);
-  Matter.Composite.add(rope.body, fruit);
+  fruit = Bodies.circle(250, 250, 20);
+  Matter.Composite.add(rope1.body, fruit);
 
-  fruit_con = new Link(rope, fruit);
+  fruit_con1 = new Link(rope1, fruit);
+  fruit_con2 = new Link(rope2, fruit);
+  fruit_con3 = new Link(rope3, fruit);
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
@@ -100,7 +114,9 @@ function draw() {
   }
   pop();
 
-  rope.show();
+  rope1.show();
+  rope2.show();
+  rope3.show();
   Engine.update(engine);
   ground.show();
 
@@ -121,11 +137,25 @@ function draw() {
 
 }
 
-function drop() {
+function drop1() {
   cut_sound.play();
-  rope.break();
-  fruit_con.detach();
-  fruit_con = null;
+  rope1.break();
+  fruit_con1.detach();
+  fruit_con1 = null;
+}
+
+function drop2() {
+  cut_sound.play();
+  rope2.break();
+  fruit_con2.detach();
+  fruit_con2 = null;
+}
+
+function drop3() {
+  cut_sound.play();
+  rope3.break();
+  fruit_con3.detach();
+  fruit_con3 = null;
 }
 
 function keyPressed() {
