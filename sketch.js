@@ -9,14 +9,14 @@ const Composite = Matter.Composite;
 
 let engine;
 let world;
-var corda, fruta, solo;
-var fruta_con;
+var corda1, corda2, corda3, fruta, solo;
+var fruta_con1, fruta_con2, fruta_con3;
 
 var fundo;
 var comida_img;
 var coelho_img;
 
-var botao;
+var botao1, botao2, botao3;
 var coelho;
 var piscar, comer, triste;
 var botao_mudo;
@@ -55,17 +55,29 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
 
-  botao = createImg('cut_btn.png');
-  botao.position(20, 30);
-  botao.size(50, 50);
-  botao.mouseClicked(cair);
+  botao1 = createImg('cut_btn.png');
+  botao1.position(20, 30);
+  botao1.size(50, 50);
+  botao1.mouseClicked(cair1);
+
+  botao2 = createImg('cut_btn.png');
+  botao2.position(330, 35);
+  botao2.size(50, 50);
+  botao2.mouseClicked(cair2);
+
+  botao2 = createImg('cut_btn.png');
+  botao2.position(360, 200);
+  botao2.size(50, 50);
+  botao2.mouseClicked(cair2);
 
   botao_mudo = createImg('mute.png');
   botao_mudo.position(440, 20);
   botao_mudo.size(50, 50);
   botao_mudo.mouseClicked(mutar);
 
-  corda = new Corda(8, {x: 40,y: 30});
+  corda1 = new Corda(8, {x: 40, y: 30});
+  corda2 = new Corda(8, {x: 370, y: 40});
+  corda3 = new Corda(8, {x: 400, y: 225});
   solo = new Solo(200, 690, 600, 20);
 
   piscar.frameDelay = 20;
@@ -80,9 +92,11 @@ function setup() {
   coelho.changeAnimation('piscando');
 
   fruta = Bodies.circle(45, 200, 20);
-  Matter.Composite.add(corda.body, fruta);
+  Matter.Composite.add(corda1.body, fruta);
 
-  fruta_con = new Link(corda, fruta);
+  fruta_con1 = new Link(corda1, fruta);
+  fruta_con2 = new Link(corda2, fruta);
+  fruta_con3 = new Link(corda3, fruta);
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
@@ -100,7 +114,9 @@ function draw() {
   }
   pop();
 
-  corda.mostrar();
+  corda1.mostrar();
+  corda2.mostrar();
+  corda3.mostrar();
   Engine.update(engine);
   solo.mostrar();
 
@@ -121,11 +137,25 @@ function draw() {
 
 }
 
-function cair() {
+function cair1() {
   som_cortar.play();
-  corda.cortar();
-  fruta_con.soltar();
-  fruta_con = null;
+  corda1.cortar();
+  fruta_con1.soltar();
+  fruta_con1 = null;
+}
+
+function cair2() {
+  som_cortar.play();
+  corda2.cortar();
+  fruta_con2.soltar();
+  fruta_con2 = null;
+}
+
+function cair3() {
+  som_cortar.play();
+  corda3.cortar();
+  fruta_con3.soltar();
+  fruta_con3 = null;
 }
 
 function keyPressed() {
