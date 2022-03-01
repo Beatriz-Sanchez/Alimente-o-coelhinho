@@ -9,7 +9,7 @@ const Composite = Matter.Composite;
 
 let engine;
 let world;
-var rope, fruit, ground;
+var rope1, fruit, ground;
 var fruit_con;
 var fruit_con_2;
 var fruit_con_3;
@@ -19,10 +19,14 @@ var bg_img;
 var food;
 var rabbit;
 
-var button, button2, button3;
+var button1, button2;
 var bunny;
 var blink, eat, sad;
 var mute_btn;
+var star_img, star, star2;
+var empty_star, one_star, two_stars;
+var star_display;
+var blower;
 
 var fr;
 
@@ -35,6 +39,7 @@ function preload() {
   bg_img = loadImage('background.png');
   food = loadImage('melon.png');
   rabbit = loadImage('Rabbit-01.png');
+  star_img = loadImage('star.png');
 
   bk_song = loadSound('sound1.mp3');
   sad_sound = loadSound("sad.wav")
@@ -45,7 +50,9 @@ function preload() {
   blink = loadAnimation("blink_1.png", "blink_2.png", "blink_3.png");
   eat = loadAnimation("eat_0.png", "eat_1.png", "eat_2.png", "eat_3.png", "eat_4.png");
   sad = loadAnimation("sad_1.png", "sad_2.png", "sad_3.png");
-
+  empty_star = loadAnimation("empty.png");
+  one_star = loadAnimation("one_star.png");
+  two_stars = loadAnimation("stars.png");
 
   blink.playing = true;
   eat.playing = true;
@@ -55,7 +62,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(500, 700);
+  createCanvas(600, 700);
   frameRate(80);
 
   bk_song.play();
@@ -65,31 +72,35 @@ function setup() {
   world = engine.world;
 
   //botão 1
-  button = createImg('cut_btn.png');
-  button.position(180, 90);
-  button.size(50, 50);
-  button.mouseClicked(drop);
+  button1 = createImg('cut_btn.png');
+  button1.position(100, 90);
+  button1.size(50, 50);
+  button1.mouseClicked(drop1);
 
   //botão 2
   button2 = createImg('cut_btn.png');
-  button2.position(390, 90);
+  button2.position(450, 90);
   button2.size(50, 50);
   button2.mouseClicked(drop2);
 
-  rope = new Rope(7, {x: 200,y: 90});
-  rope2 = new Rope(7, {x: 400,y: 90});
+  rope1 = new Rope(7, {x: 120, y: 90});
+  rope2 = new Rope(7, {x: 490, y: 90});
 
+  blower = createImg('baloon2.png');
+  blower.position(260, 370);
+  blower.size(120, 120);
+  blower.mouseClicked(airblow);
 
   mute_btn = createImg('mute.png');
   mute_btn.position(width - 50, 20);
   mute_btn.size(50, 50);
   mute_btn.mouseClicked(mute);
 
-  ground = new Ground(250, height, width, 20);
+  ground = new Ground(300,height,width,20);
   blink.frameDelay = 20;
   eat.frameDelay = 20;
 
-  bunny = createSprite(120, 620, 100, 100);
+  bunny = createSprite(200,height-80,100,100);
   bunny.scale = 0.2;
 
   bunny.addAnimation('blinking', blink);
@@ -99,10 +110,25 @@ function setup() {
 
 
   fruit = Bodies.circle(300, 300, 20);
-  Matter.Composite.add(rope.body, fruit);
+  Matter.Composite.add(rope1.body, fruit);
 
-  fruit_con = new Link(rope, fruit);
+  fruit_con = new Link(rope1, fruit);
   fruit_con_2 = new Link(rope2, fruit);
+
+  star = createSprite(320, 50, 20, 20);
+  star.addImage(star_img);
+  star.scale = 0.02;
+
+  star2 = createSprite(50, 370, 20, 20);
+  star2.addImage(star_img);
+  star2.scale = 0.02;
+
+  star_display = createSprite(50, 20, 30, 30);
+  star_display.scale = 0.2;
+  star_display.addAnimation('empty', empty_star);
+  star_display.addAnimation('one', one_star);
+  star_display.addAnimation('two', two_stars);
+  star_display.changeAnimation('empty');
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
@@ -121,7 +147,7 @@ function draw() {
   }
   pop();
 
-  rope.show();
+  rope1.show();
   rope2.show();
 
   Engine.update(engine);
@@ -129,7 +155,7 @@ function draw() {
 
   drawSprites();
 
-  if (collide(fruit, bunny) == true) {
+  if (collide(fruit, bunny,80) == true) {
     World.remove(engine.world, fruit);
     fruit = null;
     bunny.changeAnimation('eating');
@@ -143,11 +169,20 @@ function draw() {
     fruit = null;
   }
 
+  if (collide(fruit, star, 20) == true) {
+    star.visible = false;
+    star_display.changeAnimation('one');
+  }
+  if (collide(fruit, star2, 20) == true) {
+    star2.visible = false;
+    star_display.changeAnimation('two');
+  }
+
 }
 
-function drop() {
+function drop1() {
   cut_sound.play();
-  rope.break();
+  rope1.break();
   fruit_con.dettach();
   fruit_con = null;
 }
@@ -159,10 +194,10 @@ function drop2() {
   fruit_con_2 = null;
 }
 
-function collide(body, sprite) {
+function collide(body, sprite, limit) {
   if (body != null) {
     var d = dist(body.position.x, body.position.y, sprite.position.x, sprite.position.y);
-    if (d <= 80) {
+    if (d <= limit) {
       return true;
     } else {
       return false;
@@ -177,4 +212,9 @@ function mute() {
   } else {
     bk_song.play();
   }
+}
+
+function airblow(){
+  air.play();
+  Matter.Body.applyForce(fruit,{x:0,y:0},{x:0,y:-0.03});   
 }
