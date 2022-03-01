@@ -9,19 +9,30 @@ const Composite = Matter.Composite;
 
 let engine;
 let world;
-var rope1, rope2, rope3, fruit, ground;
-var fruit_con1, fruit_con2, fruit_con3;
+var rope, fruit, ground;
+var fruit_con;
+var fruit_con_2;
+var fruit_con_3;
+var rope3;
 
 var bg_img;
 var food;
 var rabbit;
 
-var button1, button2, button3;
+var button, button2, button3;
 var bunny;
 var blink, eat, sad;
 var mute_btn;
 
-var bk_song, cut_sound, sad_sound, eating_sound;
+var fr;
+
+var bk_song;
+var cut_sound;
+var sad_sound;
+var eating_sound;
+var air;
+var canW;
+var canH;
 
 function preload() {
   bg_img = loadImage('background.png');
@@ -32,6 +43,7 @@ function preload() {
   sad_sound = loadSound("sad.wav")
   cut_sound = loadSound('rope_cut.mp3');
   eating_sound = loadSound('eating_sound.mp3');
+  air = loadSound('air.wav');
 
   blink = loadAnimation("blink_1.png", "blink_2.png", "blink_3.png");
   eat = loadAnimation("eat_0.png", "eat_1.png", "eat_2.png", "eat_3.png", "eat_4.png");
@@ -46,7 +58,7 @@ function preload() {
 
 function setup() {
   createCanvas(500, 700);
-
+  
   frameRate(80);
 
   bk_song.play();
@@ -55,31 +67,34 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
 
-  button1 = createImg('cut_btn.png');
-  button1.position(20, 30);
-  button1.size(50, 50);
-  button1.mouseClicked(drop1);
+  //btn 1
+  button = createImg('cut_btn.png');
+  button.position(20, 30);
+  button.size(50, 50);
+  button.mouseClicked(drop);
 
+  //btn 2
   button2 = createImg('cut_btn.png');
   button2.position(330, 35);
-  button2.size(50, 50);
+  button2.size(60, 60);
   button2.mouseClicked(drop2);
 
+  //btn3
   button3 = createImg('cut_btn.png');
   button3.position(360, 200);
-  button3.size(50, 50);
+  button3.size(60, 60);
   button3.mouseClicked(drop3);
 
   mute_btn = createImg('mute.png');
-  mute_btn.position(440, 20);
+  mute_btn.position(450, 20);
   mute_btn.size(50, 50);
   mute_btn.mouseClicked(mute);
 
-  rope1 = new Rope(8, {x: 40,y: 30});
-  rope2 = new Rope(6, {x: 360,y: 40});
+  rope = new Rope(8, {x: 40,y: 30});
+  rope2 = new Rope(7, {x: 370,y: 40});
   rope3 = new Rope(4, {x: 400,y: 225});
-  ground = new Ground(200, 690, 600, 20);
 
+  ground = new Ground(200, 690, 600, 20);
   blink.frameDelay = 20;
   eat.frameDelay = 20;
 
@@ -91,16 +106,17 @@ function setup() {
   bunny.addAnimation('crying', sad);
   bunny.changeAnimation('blinking');
 
-  fruit = Bodies.circle(250, 250, 20);
-  Matter.Composite.add(rope1.body, fruit);
+  fruit = Bodies.circle(300, 300, 20);
+  Matter.Composite.add(rope.body, fruit);
 
-  fruit_con1 = new Link(rope1, fruit);
-  fruit_con2 = new Link(rope2, fruit);
-  fruit_con3 = new Link(rope3, fruit);
+  fruit_con = new Link(rope, fruit);
+  fruit_con_2 = new Link(rope2, fruit);
+  fruit_con_3 = new Link(rope3, fruit);
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50);
+
 }
 
 function draw() {
@@ -114,9 +130,10 @@ function draw() {
   }
   pop();
 
-  rope1.show();
+  rope.show();
   rope2.show();
   rope3.show();
+
   Engine.update(engine);
   ground.show();
 
@@ -127,42 +144,37 @@ function draw() {
     eating_sound.play();
   }
 
-
   if (fruit != null && fruit.position.y >= 650) {
     bunny.changeAnimation('crying');
     bk_song.stop();
     sad_sound.play();
     fruit = null;
+
   }
 
 }
 
-function drop1() {
+function drop() {
   cut_sound.play();
-  rope1.break();
-  fruit_con1.detach();
-  fruit_con1 = null;
+  rope.break();
+  fruit_con.detach();
+  fruit_con = null;
 }
 
 function drop2() {
   cut_sound.play();
   rope2.break();
-  fruit_con2.detach();
-  fruit_con2 = null;
+  fruit_con_2.detach();
+  fruit_con_2 = null;
 }
 
 function drop3() {
   cut_sound.play();
   rope3.break();
-  fruit_con3.detach();
-  fruit_con3 = null;
+  fruit_con_3.detach();
+  fruit_con_3 = null;
 }
 
-function keyPressed() {
-  if (keyCode == LEFT_ARROW) {
-    airblow();
-  }
-}
 
 function collide(body, sprite) {
   if (body != null) {
@@ -176,6 +188,7 @@ function collide(body, sprite) {
     }
   }
 }
+
 
 function mute() {
   if (bk_song.isPlaying()) {
