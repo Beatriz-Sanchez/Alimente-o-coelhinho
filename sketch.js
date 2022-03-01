@@ -9,33 +9,32 @@ const Composite = Matter.Composite;
 
 let engine;
 let world;
-var corda1, corda2, corda3, fruta, solo;
-var fruta_con1, fruta_con2, fruta_con3;
-
-var fundo;
-var comida_img;
-var coelho_img;
-
-var botao1, botao2, botao3;
+var corda, corda2, fruta, solo;
+var fruta_con, fruta_con2;
 var coelho;
-var piscar, comer, triste;
-var botao_mudo;
 
-var musica, som_cortar, som_triste, som_mastigar, som_ar;
+var fundo, fruta_img, coelho_img;
+
+var botao, botao2,botao_mudo;
+var piscar, comer, triste;
+
+var musica, som_corte, som_triste, som_mastigar, som_ar;
 
 function preload() {
   fundo = loadImage('background.png');
-  comida_img = loadImage('melon.png');
+  fruta_img = loadImage('melon.png');
   coelho_img = loadImage('Rabbit-01.png');
 
   musica = loadSound('sound1.mp3');
   som_triste = loadSound("sad.wav")
-  som_cortar = loadSound('rope_cut.mp3');
+  som_corte = loadSound('rope_cut.mp3');
   som_mastigar = loadSound('eating_sound.mp3');
+  som_ar = loadSound('air.wav');
 
   piscar = loadAnimation("blink_1.png", "blink_2.png", "blink_3.png");
   comer = loadAnimation("eat_0.png", "eat_1.png", "eat_2.png", "eat_3.png", "eat_4.png");
   triste = loadAnimation("sad_1.png", "sad_2.png", "sad_3.png");
+
 
   piscar.playing = true;
   comer.playing = true;
@@ -45,17 +44,7 @@ function preload() {
 }
 
 function setup() {
-  var Celular = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (Celular) {
-    canW = displayWidth;
-    canH = displayHeight;
-    createCanvas(displayWidth + 80, displayHeight);
-  } else {
-    canW = windowWidth;
-    canH = windowHeight;
-    createCanvas(windowWidth,windowHeight)
-}
-
+  createCanvas(500, 700);
   frameRate(80);
 
   musica.play();
@@ -64,90 +53,80 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
 
-  botao1 = createImg('cut_btn.png');
-  botao1.position(20, 30);
-  botao1.size(50, 50);
-  botao1.mouseClicked(cair1);
+  //botão 1
+  botao = createImg('cut_btn.png');
+  botao.position(180, 90);
+  botao.size(50, 50);
+  botao.mouseClicked(cair);
 
+  //botão 2
   botao2 = createImg('cut_btn.png');
-  botao2.position(330, 35);
+  botao2.position(390, 90);
   botao2.size(50, 50);
   botao2.mouseClicked(cair2);
 
-  botao2 = createImg('cut_btn.png');
-  botao2.position(360, 200);
-  botao2.size(50, 50);
-  botao2.mouseClicked(cair2);
+  corda = new Corda(7, {x: 200,y: 90});
+  corda2 = new Corda(7, {x: 400,y: 90});
+
 
   botao_mudo = createImg('mute.png');
-  botao_mudo.position(440, 20);
+  botao_mudo.position(width - 50, 20);
   botao_mudo.size(50, 50);
   botao_mudo.mouseClicked(mutar);
 
-  corda1 = new Corda(8, {
-    x: 40,
-    y: 30
-  });
-  corda2 = new Corda(8, {
-    x: 370,
-    y: 40
-  });
-  corda3 = new Corda(8, {
-    x: 400,
-    y: 225
-  });
-  solo = new Solo(200, canH, 600, 20);
-
+  solo = new Solo(250, height, width, 20);
   piscar.frameDelay = 20;
   comer.frameDelay = 20;
 
-  coelho = createSprite(170, canH-80, 100, 100);
+  coelho = createSprite(120, 620, 100, 100);
   coelho.scale = 0.2;
 
-  coelho.addAnimation('piscando', piscar);
-  coelho.addAnimation('comendo', comer);
-  coelho.addAnimation('chorando', triste);
-  coelho.changeAnimation('piscando');
+  coelho.addAnimation('blinking', piscar);
+  coelho.addAnimation('eating', comer);
+  coelho.addAnimation('crying', triste);
+  coelho.changeAnimation('blinking');
 
-  fruta = Bodies.circle(45, 200, 20);
-  Matter.Composite.add(corda1.body, fruta);
 
-  fruta_con1 = new Link(corda1, fruta);
+  fruta = Bodies.circle(300, 300, 20);
+  Matter.Composite.add(corda.body, fruta);
+
+  fruta_con = new Link(corda, fruta);
   fruta_con2 = new Link(corda2, fruta);
-  fruta_con3 = new Link(corda3, fruta);
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50);
+
 }
 
 function draw() {
   background(51);
-  image(fundo, 0, 0, displayWidth+80, displayHeight);
+  image(fundo, 0, 0, width, height);
 
   push();
   imageMode(CENTER);
   if (fruta != null) {
-    image(comida_img, fruta.position.x, fruta.position.y, 70, 70);
+    image(fruta_img, fruta.position.x, fruta.position.y, 70, 70);
   }
   pop();
 
-  corda1.mostrar();
+  corda.mostrar();
   corda2.mostrar();
-  corda3.mostrar();
+
   Engine.update(engine);
   solo.mostrar();
 
   drawSprites();
 
   if (colisao(fruta, coelho) == true) {
-    coelho.changeAnimation('comendo');
+    World.remove(engine.world, fruta);
+    fruta = null;
+    coelho.changeAnimation('eating');
     som_mastigar.play();
   }
 
-
   if (fruta != null && fruta.position.y >= 650) {
-    coelho.changeAnimation('chorando');
+    coelho.changeAnimation('crying');
     musica.stop();
     som_triste.play();
     fruta = null;
@@ -155,45 +134,31 @@ function draw() {
 
 }
 
-function cair1() {
-  som_cortar.play();
-  corda1.cortar();
-  fruta_con1.soltar();
-  fruta_con1 = null;
+function cair() {
+  som_corte.play();
+  corda.cortar();
+  fruta_con.soltar();
+  fruta_con = null;
 }
 
 function cair2() {
-  som_cortar.play();
+  som_corte.play();
   corda2.cortar();
   fruta_con2.soltar();
   fruta_con2 = null;
 }
 
-function cair3() {
-  som_cortar.play();
-  corda3.cortar();
-  fruta_con3.soltar();
-  fruta_con3 = null;
-}
-
-function keyPressed() {
-  if (keyCode == LEFT_ARROW) {
-    soprar();
-  }
-}
-
-function colisao(corpo, sprite) {
-  if (corpo != null) {
-    var d = dist(corpo.position.x, corpo.position.y, sprite.position.x, sprite.position.y);
+function colisao(body, sprite) {
+  if (body != null) {
+    var d = dist(body.position.x, body.position.y, sprite.position.x, sprite.position.y);
     if (d <= 80) {
-      World.remove(engine.world, fruta);
-      fruta = null;
       return true;
     } else {
       return false;
     }
   }
 }
+
 
 function mutar() {
   if (musica.isPlaying()) {
