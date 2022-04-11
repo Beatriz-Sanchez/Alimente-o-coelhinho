@@ -49,9 +49,6 @@ function setup() {
 
   frameRate(80);
 
-  bk_song.play();
-  bk_song.setVolume(0.5);
-
   engine = Engine.create();
   world = engine.world;
 
@@ -59,11 +56,6 @@ function setup() {
   button.position(20, 30);
   button.size(50, 50);
   button.mouseClicked(drop);
-
-  mute_btn = createImg('mute.png');
-  mute_btn.position(440, 20);
-  mute_btn.size(50, 50);
-  mute_btn.mouseClicked(mute);
 
   rope = new Rope(8, {x: 40,y: 30});
   ground = new Ground(200, 690, 600, 20);
@@ -108,14 +100,12 @@ function draw() {
 
   if (collide(fruit, bunny) == true) {
     bunny.changeAnimation('eating');
-    eating_sound.play();
   }
 
 
   if (fruit != null && fruit.position.y >= 650) {
     bunny.changeAnimation('crying');
     bk_song.stop();
-    sad_sound.play();
     fruit = null;
   }
 
@@ -128,12 +118,6 @@ function drop() {
   fruit_con = null;
 }
 
-function keyPressed() {
-  if (keyCode == LEFT_ARROW) {
-    airblow();
-  }
-}
-
 function collide(body, sprite) {
   if (body != null) {
     var d = dist(body.position.x, body.position.y, sprite.position.x, sprite.position.y);
@@ -144,13 +128,5 @@ function collide(body, sprite) {
     } else {
       return false;
     }
-  }
-}
-
-function mute() {
-  if (bk_song.isPlaying()) {
-    bk_song.stop();
-  } else {
-    bk_song.play();
   }
 }
